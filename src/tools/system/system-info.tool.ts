@@ -1,6 +1,6 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
-import { SystemService } from "../../services/system.service.js";
+import { SystemInfoService } from "../../services/system.service.js";
 import { textResponse } from "../../utils/mcp-response.js";
 
 export function registerSystemInfoTool(server: McpServer): void {
@@ -11,7 +11,7 @@ export function registerSystemInfoTool(server: McpServer): void {
       inputSchema: {},
     },
     async () => {
-      const systemInfo = SystemService.getSystemInfo();
+      const systemInfo = SystemInfoService.getSystemInfo();
 
       return textResponse(systemInfo);
     }

@@ -8,7 +8,7 @@ export interface SystemInfo {
   uptime: number;
 }
 
-export class SystemService {
+export class SystemInfoService {
   public static getSystemInfo(): SystemInfo {
     return {
       platform: process.platform,
