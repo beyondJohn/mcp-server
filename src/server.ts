@@ -1,6 +1,5 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { registerHelloTool } from "./tools/hello/hello.tool.js";
-import { registerTimeTool } from "./tools/time/time.tool.js";
+import { registerTools } from "./tools/index.js";
 
 export function createServer(): McpServer {
   const server = new McpServer({
@@ -8,9 +7,7 @@ export function createServer(): McpServer {
     version: "1.0.0",
   });
 
-  registerHelloTool(server);
-  
-  registerTimeTool(server);
+  registerTools(server);
 
   return server;
 }
