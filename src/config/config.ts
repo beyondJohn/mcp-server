@@ -1,0 +1,37 @@
+import { env } from "./env.js";
+
+export interface AppConfig {
+  app: {
+    name: string;
+    version: string;
+    environment: "development" | "test" | "production";
+  };
+
+  google: {
+    clientId: string;
+    clientSecret: string;
+    redirectUri: string;
+  };
+
+  server: {
+    transport: "stdio" | "http";
+  };
+}
+
+export const config: AppConfig = {
+  app: {
+    name: "mcp-server",
+    version: "1.0.0",
+    environment: env.NODE_ENV,
+  },
+
+  google: {
+    clientId: env.GOOGLE_CLIENT_ID,
+    clientSecret: env.GOOGLE_CLIENT_SECRET,
+    redirectUri: env.GOOGLE_REDIRECT_URI,
+  },
+
+  server: {
+    transport: "stdio",
+  },
+};

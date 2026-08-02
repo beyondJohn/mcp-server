@@ -1,25 +1,10 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import "dotenv/config";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { z } from "zod";
-const server = new McpServer({
-    name: "mcp-server",
-    version: "1.0.0",
-});
-server.registerTool("hello", {
-    description: "Say hello to someone",
-    inputSchema: {
-        name: z.string().describe("The name of the person to greet"),
-    },
-}, async ({ name }) => {
-    return {
-        content: [
-            {
-                type: "text",
-                text: `Hello, ${name}!`,
-            },
-        ],
-    };
-});
+import { createServer } from "./server.js";
+import { Logger } from "./logger/index.js";
+Logger.info("Server", "Starting MCP server...");
+const server = createServer();
 const transport = new StdioServerTransport();
 await server.connect(transport);
+Logger.info("Server", "MCP server started (stdio transport).");
 //# sourceMappingURL=index.js.map

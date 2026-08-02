@@ -1,5 +1,7 @@
 import * as os from "node:os";
 
+import { Logger } from "../logger/index.js";
+
 export interface SystemInfo {
   platform: string;
   hostname: string;
@@ -10,6 +12,7 @@ export interface SystemInfo {
 
 export class SystemInfoService {
   public static getSystemInfo(): SystemInfo {
+    Logger.debug("SystemInfoService", "Collecting system information.");
     return {
       platform: process.platform,
       hostname: os.hostname(),
