@@ -7,7 +7,7 @@ import type { GoogleAuthProvider } from "../providers/google/google-auth.provide
 
 export function startWebServer(config: AppConfig, googleProvider: GoogleAuthProvider): HttpServer {
 
-  const app = createWebApp({googleProvider});
+  const app = createWebApp({googleAuthProvider: googleProvider});
 
   const server = http.createServer(app);
 

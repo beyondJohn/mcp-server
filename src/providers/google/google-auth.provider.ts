@@ -1,4 +1,4 @@
-import { OAuth2Client } from "google-auth-library";
+import { OAuth2Client, Credentials } from "google-auth-library";
 
 import type { AppConfig } from "../../config/config.js";
 import { Logger } from "../../logger/index.js";
@@ -39,7 +39,7 @@ export class GoogleAuthProvider {
 
   public async exchangeCodeForTokens(
     code: string
-  ) {
+  ): Promise<Credentials> {
     this.logger.info(
       "GoogleAuthProvider",
       "Exchanging authorization code."

@@ -4,7 +4,7 @@ import { GoogleScopes } from "../providers/google/google-scopes.js";
 import { GoogleAuthProvider } from "../providers/google/google-auth.provider.js";
 
 export interface WebDependencies {
-  googleProvider: GoogleAuthProvider;
+  googleAuthProvider: GoogleAuthProvider;
 }
 
 export function createWebApp(
@@ -26,7 +26,7 @@ export function createWebApp(
 
   app.get("/oauth/google/login", (_req, res) => {
     const url =
-      dependencies.googleProvider.getAuthorizationUrl(
+      dependencies.googleAuthProvider.getAuthorizationUrl(
         GoogleScopes.BASIC_PROFILE
       );
 
@@ -44,12 +44,39 @@ export function createWebApp(
 
     try {
       const tokens =
-        await dependencies.googleProvider.exchangeCodeForTokens(code);
+        await dependencies.googleAuthProvider.exchangeCodeForTokens(code);
 
       res.json(tokens);
     } catch (error) {
       res.status(500).json({
         error: "Failed to exchange authorization code.",
+      });
+    }
+  });
+
+  app.get("/oauth/google/callback", async (req, res) => {
+    const { code } = req.query;
+
+    if (typeof code !== "string") {
+      return res.status(400).json({
+        error: "Missing authorization code.",
+      });
+    }
+
+    try {
+      const tokens =
+        await dependencies.googleAuthProvider.exchangeCodeForTokens(code);
+
+      res.json(tokens);
+    } catch (error) {
+      console.error(
+        "OAuth",
+        "Token exchange failed.",
+        error
+      );
+
+      res.status(500).json({
+        error: "Authentication failed.",
       });
     }
   });
