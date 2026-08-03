@@ -1,10 +1,10 @@
 import express, { type Express } from "express";
 
 import { GoogleScopes } from "../providers/google/google-scopes.js";
-import type { GoogleProvider } from "../providers/google/google.provider.js";
+import { GoogleAuthProvider } from "../providers/google/google-auth.provider.js";
 
 export interface WebDependencies {
-  googleProvider: GoogleProvider;
+  googleProvider: GoogleAuthProvider;
 }
 
 export function createWebApp(
@@ -31,6 +31,27 @@ export function createWebApp(
       );
 
     res.redirect(url);
+  });
+
+  app.get("/oauth/google/callback", async (req, res) => {
+    const code = req.query.code;
+
+    if (typeof code !== "string") {
+      return res.status(400).json({
+        error: "Missing authorization code.",
+      });
+    }
+
+    try {
+      const tokens =
+        await dependencies.googleProvider.exchangeCodeForTokens(code);
+
+      res.json(tokens);
+    } catch (error) {
+      res.status(500).json({
+        error: "Failed to exchange authorization code.",
+      });
+    }
   });
 
   return app;

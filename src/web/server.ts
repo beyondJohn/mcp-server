@@ -3,9 +3,9 @@ import http, { type Server as HttpServer } from "node:http";
 import type { AppConfig } from "../config/config.js";
 import { Logger } from "../logger/index.js";
 import { createWebApp } from "./app.js";
-import type { GoogleProvider } from "../providers/google/google.provider.js";
+import type { GoogleAuthProvider } from "../providers/google/google-auth.provider.js";
 
-export function startWebServer(config: AppConfig, googleProvider: GoogleProvider): HttpServer {
+export function startWebServer(config: AppConfig, googleProvider: GoogleAuthProvider): HttpServer {
 
   const app = createWebApp({googleProvider});
 
