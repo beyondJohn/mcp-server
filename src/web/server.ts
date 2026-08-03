@@ -3,9 +3,11 @@ import http, { type Server as HttpServer } from "node:http";
 import type { AppConfig } from "../config/config.js";
 import { Logger } from "../logger/index.js";
 import { createWebApp } from "./app.js";
+import type { GoogleProvider } from "../providers/google/google.provider.js";
 
-export function startWebServer(config: AppConfig): HttpServer {
-  const app = createWebApp();
+export function startWebServer(config: AppConfig, googleProvider: GoogleProvider): HttpServer {
+
+  const app = createWebApp({googleProvider});
 
   const server = http.createServer(app);
 

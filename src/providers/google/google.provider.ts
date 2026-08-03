@@ -23,7 +23,7 @@ export class GoogleProvider {
     return this.oauthClient;
   }
 
-  public getAuthorizationUrl(): string {
+  public getAuthorizationUrl(scopes: ReadonlyArray<string>): string {
     this.logger.debug(
       "GoogleProvider",
       "Generating Google authorization URL."
@@ -32,11 +32,7 @@ export class GoogleProvider {
     return this.oauthClient.generateAuthUrl({
       access_type: "offline",
       prompt: "consent",
-      scope: [
-        "openid",
-        "email",
-        "profile",
-      ],
+      scope: [...scopes],
     });
   }
 }
