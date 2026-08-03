@@ -15,6 +15,7 @@ export interface AppConfig {
 
   server: {
     transport: "stdio" | "http";
+    port: number;
   };
 }
 
@@ -33,5 +34,6 @@ export const config: AppConfig = {
 
   server: {
     transport: "stdio",
+    port: 8787,
   },
 };

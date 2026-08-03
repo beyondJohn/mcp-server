@@ -1,10 +1,13 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 
-import { TimeService } from "../../services/time.service.js";
-import { textResponse } from "../../utils/mcp-response.js";
+import type { ITimeService } from "../../../services/time/time.interface.js";
+import { textResponse } from "../../../utils/mcp-response.js";
 
-export function registerTimeTool(server: McpServer): void {
+export function registerTimeTool(
+  server: McpServer,
+  timeService: ITimeService
+): void {
   server.registerTool(
     "time.now",
     {
@@ -17,7 +20,7 @@ export function registerTimeTool(server: McpServer): void {
       },
     },
     async ({ timezone }) => {
-      const currentTime = TimeService.getCurrentTime(timezone);
+      const currentTime = timeService.getCurrentTime(timezone);
 
       return textResponse(currentTime);
     }
