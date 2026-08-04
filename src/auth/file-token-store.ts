@@ -8,10 +8,22 @@ import type { TokenStore } from "./token-store.js";
 
 export class FileTokenStore implements TokenStore {
     constructor(
-        private readonly filePath = path.resolve("tokens.json")
-    ) { }
+        private readonly filePath = path.resolve(
+            process.cwd(),
+            ".data",
+            "tokens.json")
+    ) {
+        Logger.debug(
+            "FileTokenStore",
+            `Using token file: ${this.filePath}`
+        );
+    }
 
     public async load(): Promise<Credentials | null> {
+        await fs.mkdir(path.dirname(this.filePath), {
+            recursive: true,
+        });
+
         try {
             const json = await fs.readFile(this.filePath, "utf8");
 
@@ -21,17 +33,25 @@ export class FileTokenStore implements TokenStore {
             );
 
             return JSON.parse(json) as Credentials;
-        } catch {
-            Logger.debug(
-                "FileTokenStore",
-                "No saved OAuth tokens found."
-            );
+        } catch (error) {
+            if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+                Logger.debug(
+                    "FileTokenStore",
+                    "No saved OAuth tokens found."
+                );
 
-            return null;
+                return null;
+            }
+
+            throw error;
         }
     }
 
     public async save(tokens: Credentials): Promise<void> {
+        await fs.mkdir(path.dirname(this.filePath), {
+            recursive: true,
+        });
+
         await fs.writeFile(
             this.filePath,
             JSON.stringify(tokens, null, 2),

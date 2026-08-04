@@ -1,10 +1,10 @@
 import express, { type Express } from "express";
 
 import { GoogleScopes } from "../providers/google/google-scopes.js";
-import { GoogleAuthProvider } from "../providers/google/google-auth.provider.js";
+import type { IGoogleAuthProvider } from "../auth/google-auth.interface.js";
 
 export interface WebDependencies {
-  googleAuthProvider: GoogleAuthProvider;
+  googleAuthProvider: IGoogleAuthProvider;
 }
 
 export function createWebApp(
@@ -43,10 +43,12 @@ export function createWebApp(
     }
 
     try {
-      const tokens =
-        await dependencies.googleAuthProvider.exchangeCodeForTokens(code);
+      await dependencies.googleAuthProvider.authenticate(code);
 
-      res.json(tokens);
+      res.send(`
+    <h2>Authentication successful.</h2>
+    <p>You may close this window.</p>
+`);
     } catch (error) {
       res.status(500).json({
         error: "Failed to exchange authorization code.",
@@ -64,10 +66,12 @@ export function createWebApp(
     }
 
     try {
-      const tokens =
-        await dependencies.googleAuthProvider.exchangeCodeForTokens(code);
+      await dependencies.googleAuthProvider.authenticate(code);
 
-      res.json(tokens);
+      res.send(`
+    <h2>Authentication successful.</h2>
+    <p>You may close this window.</p>
+`);
     } catch (error) {
       console.error(
         "OAuth",

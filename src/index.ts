@@ -1,34 +1,36 @@
 import "dotenv/config";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { GoogleAuthProvider } from "./providers/google/google-auth.provider.js";
-import { Logger } from "./logger/index.js";
-import { config } from "./config/config.js";
 
-import { startWebServer } from "./web/server.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+
+import { config } from "./config/config.js";
+import { Logger } from "./logger/index.js";
+
 import { createServer } from "./mcp/server.js";
+import { startWebServer } from "./web/server.js";
+
+import { GoogleAuthProvider } from "./auth/google-auth.provider.js";
 import { FileTokenStore } from "./auth/file-token-store.js";
 
-// const tokenStore = new FileTokenStore();
+Logger.info("Server", "Starting application...");
 
-// await tokenStore.save({
-//   access_token: "test",
-// });
+const tokenStore = new FileTokenStore();
 
-// const tokens = await tokenStore.load();
+const googleAuthProvider = new GoogleAuthProvider(
+  config,
+  tokenStore,
+  Logger
+);
 
-// Logger.info(
-//   "TokenStore",
-//   JSON.stringify(tokens, null, 2)
-// );
-
-// await tokenStore.clear();
+await googleAuthProvider.initialize();
 
 Logger.info("Server", "Starting web server...");
-const googleAuthProvider = new GoogleAuthProvider(config, Logger);
 startWebServer(config, googleAuthProvider);
 
-Logger.info("Server","Starting MCP server...");
+Logger.info("Server", "Starting MCP server...");
 const server = createServer();
+
 const transport = new StdioServerTransport();
+
 await server.connect(transport);
-Logger.info("Server", "MCP server started (stdio transport).");
+
+Logger.info("Server", "MCP server started.");
