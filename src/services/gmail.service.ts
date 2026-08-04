@@ -1,7 +1,7 @@
-import type { GoogleAuthProvider } from "../providers/google/google-auth.provider.js";
+import type { IGoogleAuthProvider } from "../auth/google-auth.interface.js";
 
 export class GmailService {
     constructor(
-        private readonly googleProvider: GoogleAuthProvider
+        private readonly googleProvider: IGoogleAuthProvider
     ) {}
 }
