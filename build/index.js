@@ -11,20 +11,11 @@ Logger.info("Server", "Starting application...");
 const tokenStore = new FileTokenStore();
 const googleAuthProvider = new GoogleAuthProvider(config, tokenStore, Logger);
 await googleAuthProvider.initialize();
-const gmailProvider = new GmailProvider(googleAuthProvider, Logger);
-const labels = await gmailProvider.listLabels();
-Logger.info("GmailProvider", `Found ${labels.length} labels.`);
-for (const label of labels) {
-    Logger.info("GmailProvider", label);
-}
 Logger.info("Server", "Starting web server...");
 startWebServer(config, googleAuthProvider);
-// const gmailProvider = new GmailProvider(
-//   googleAuthProvider,
-//   Logger
-// );
+const gmailProvider = new GmailProvider(googleAuthProvider, Logger);
 Logger.info("Server", "Starting MCP server...");
-const server = createServer();
+const server = createServer(googleAuthProvider);
 const transport = new StdioServerTransport();
 await server.connect(transport);
 Logger.info("Server", "MCP server started.");

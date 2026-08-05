@@ -12,11 +12,11 @@ export class Logger {
   }
 
   public static info(context: string, message: string): void {
-    console.log(Logger.format("INFO", context, message));
+    console.error(Logger.format("INFO", context, message));
   }
 
   public static warn(context: string, message: string): void {
-    console.warn(Logger.format("WARN", context, message));
+    console.error(Logger.format("WARN", context, message));
   }
 
   public static error(
@@ -33,7 +33,7 @@ export class Logger {
 
   public static debug(context: string, message: string): void {
     if (process.env.NODE_ENV === "development") {
-      console.debug(Logger.format("DEBUG", context, message));
+      console.error(Logger.format("DEBUG", context, message));
     }
   }
 }

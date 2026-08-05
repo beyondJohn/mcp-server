@@ -7,7 +7,7 @@ export function registerSystemInfoTool(server: McpServer,
   systemInfoService: SystemInfoService
 ): void {
   server.registerTool(
-    "system.info",
+    "system_info",
     {
       description: "Returns information about the host system.",
       inputSchema: {},

@@ -9,7 +9,7 @@ export function registerTimeTool(
   timeService: ITimeService
 ): void {
   server.registerTool(
-    "time.now",
+    "time_now",
     {
       description: "Returns the current date and time.",
       inputSchema: {

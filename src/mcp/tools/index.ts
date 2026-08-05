@@ -5,6 +5,7 @@ import { Services } from "../../services/index.js";
 import { registerHelloTool } from "./hello/hello.tool.js";
 import { registerTimeTool } from "./time/time.tool.js";
 import { registerSystemInfoTool } from "./system/system-info.tool.js";
+import { registerGmailSendTool } from "./gmail/send.tool.js";
 
 export function registerTools(
   server: McpServer,
@@ -15,4 +16,5 @@ export function registerTools(
   registerTimeTool(server, services.timeService);
 
   registerSystemInfoTool(server, services.systemInfoService);
+  registerGmailSendTool(server, services.gmailService);
 }

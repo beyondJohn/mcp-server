@@ -32,7 +32,9 @@ const gmailProvider = new GmailProvider(
 );
 
 Logger.info("Server", "Starting MCP server...");
-const server = createServer();
+const server = createServer(
+  googleAuthProvider
+);
 
 const transport = new StdioServerTransport();
 
