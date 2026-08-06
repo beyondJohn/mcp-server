@@ -5,10 +5,13 @@ import { Logger } from "../../../logger/index.js";
 
 import type { SendEmailRequest } from "./send-email-request.js";
 import type { SendEmailResult } from "./send-email-result.js";
+import type { MessageSummary } from "./message-summary.js";
+
 import { createMimeMessage } from "./mime-message.js";
 
 export class GmailProvider {
   private readonly gmail: gmail_v1.Gmail;
+
   private get authClient() {
     return this.authProvider.getClient() as never;
   }
@@ -41,6 +44,67 @@ export class GmailProvider {
     return (
       response.data.labels?.map(label => label.name ?? "") ?? []
     );
+  }
+
+  public async listMessages(
+    maxResults = 10
+  ): Promise<MessageSummary[]> {
+    this.logger.debug(
+      "GmailProvider",
+      `Listing ${maxResults} inbox messages.`
+    );
+
+    const response =
+      await this.gmail.users.messages.list({
+        userId: "me",
+        labelIds: ["INBOX"],
+        maxResults,
+      });
+
+    const messages = response.data.messages ?? [];
+
+    const summaries: MessageSummary[] = [];
+
+    for (const message of messages) {
+      if (!message.id) {
+        continue;
+      }
+
+      const details =
+        await this.gmail.users.messages.get({
+          userId: "me",
+          id: message.id,
+          format: "metadata",
+          metadataHeaders: [
+            "Subject",
+            "From",
+            "Date",
+          ],
+        });
+
+      const headers =
+        details.data.payload?.headers ?? [];
+
+      const getHeader = (name: string): string =>
+        headers.find(
+          header => header.name === name
+        )?.value ?? "";
+
+      summaries.push({
+        id: details.data.id ?? "",
+        threadId: details.data.threadId ?? "",
+        subject: getHeader("Subject"),
+        from: getHeader("From"),
+        date: getHeader("Date"),
+      });
+    }
+
+    this.logger.info(
+      "GmailProvider",
+      `Found ${summaries.length} messages.`
+    );
+
+    return summaries;
   }
 
   public async sendEmail(
