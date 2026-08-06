@@ -10,6 +10,8 @@ import type { MessageSummary } from "./message-summary.js";
 import { createMimeMessage } from "./mime-message.js";
 import type { Message } from "./message.js";
 
+import { extractBody } from "./mime-parser.js";
+
 export class GmailProvider {
   private readonly gmail: gmail_v1.Gmail;
 
@@ -86,17 +88,12 @@ export class GmailProvider {
       const headers =
         details.data.payload?.headers ?? [];
 
-      const getHeader = (name: string): string =>
-        headers.find(
-          header => header.name === name
-        )?.value ?? "";
-
       summaries.push({
         id: details.data.id ?? "",
         threadId: details.data.threadId ?? "",
-        subject: getHeader("Subject"),
-        from: getHeader("From"),
-        date: getHeader("Date"),
+        subject: this.getHeader(headers, "Subject"),
+        from: this.getHeader(headers, "From"),
+        date: this.getHeader(headers, "Date"),
       });
     }
 
@@ -108,45 +105,17 @@ export class GmailProvider {
     return summaries;
   }
 
-  private extractBody(
-    part?: gmail_v1.Schema$MessagePart
+  private getHeader(
+    headers: gmail_v1.Schema$MessagePartHeader[],
+    name: string
   ): string {
-    if (!part) {
-      return "";
-    }
-
-    if (
-      part.mimeType === "text/plain" &&
-      part.body?.data
-    ) {
-      return this.decodeBase64Url(
-        part.body.data
-      );
-    }
-
-    for (const child of part.parts ?? []) {
-      const body =
-        this.extractBody(child);
-
-      if (body) {
-        return body;
-      }
-    }
-
-    return "";
+    return (
+      headers.find(
+        header => header.name === name
+      )?.value ?? ""
+    );
   }
 
-  private decodeBase64Url(
-    value: string
-  ): string {
-    const base64 = value
-      .replace(/-/g, "+")
-      .replace(/_/g, "/");
-
-    return Buffer
-      .from(base64, "base64")
-      .toString("utf8");
-  }
 
   public async sendEmail(
     request: SendEmailRequest
@@ -195,13 +164,7 @@ export class GmailProvider {
 
     const headers = payload?.headers ?? [];
 
-    const getHeader = (name: string): string =>
-      headers.find(
-        header => header.name === name
-      )?.value ?? "";
-
-    const body =
-      this.extractBody(payload);
+    const body = extractBody(payload);
 
     this.logger.info(
       "GmailProvider",
@@ -211,10 +174,10 @@ export class GmailProvider {
     return {
       id: response.data.id ?? "",
       threadId: response.data.threadId ?? "",
-      subject: getHeader("Subject"),
-      from: getHeader("From"),
-      to: getHeader("To"),
-      date: getHeader("Date"),
+      subject: this.getHeader(headers, "Subject"),
+      from: this.getHeader(headers, "From"),
+      to: this.getHeader(headers, "To"),
+      date: this.getHeader(headers, "Date"),
       body,
     };
   }
