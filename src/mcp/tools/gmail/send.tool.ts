@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { textResponse } from "../../../utils/mcp-response.js";
 
-import type { GmailService } from "../../../services/gmail/gmail.service.js";
+import type { GmailService } from "../../../services/gmail/service.js";
 
 export function registerGmailSendTool(
   server: McpServer,

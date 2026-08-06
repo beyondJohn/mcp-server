@@ -1,6 +1,6 @@
 import { TimeService } from "./time/time.service.js";
 import { SystemInfoService } from "./system/system-info.service.js";
-import { GmailService } from "./gmail/gmail.service.js";
+import { GmailService } from "./gmail/service.js";
 import { GmailProvider } from "../providers/google/gmail/gmail.provider.js";
 import type { IGoogleAuthProvider } from "../auth/google-auth.interface.js";
 import { Logger } from "../logger/index.js";
