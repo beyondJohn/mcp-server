@@ -14,6 +14,7 @@ export function registerOAuthRoutes(
         ...GoogleScopes.PROFILE,
         ...GoogleScopes.GMAIL_READONLY,
         ...GoogleScopes.GMAIL_SEND,
+        ...GoogleScopes.SHEETS,
       ]);
 
     res.redirect(url);
