@@ -1,6 +1,7 @@
 import type { SheetsProvider } from "../../providers/google/sheets/sheets.provider.js";
 import type { WriteRangeRequest } from "../../providers/google/sheets/write-range-request.js";
 import type { AppendRowsRequest } from "../../providers/google/sheets/append-rows-request.js";
+import type { UpdateRowRequest } from "../../providers/google/sheets/update-row-request.js";
 
 export class SheetsService {
     constructor(
@@ -28,5 +29,11 @@ export class SheetsService {
         request: AppendRowsRequest
     ): Promise<void> {
         return this.sheetsProvider.appendRows(request);
+    }
+
+    public async updateRow(
+        request: UpdateRowRequest
+    ): Promise<void> {
+        return this.sheetsProvider.updateRow(request);
     }
 }

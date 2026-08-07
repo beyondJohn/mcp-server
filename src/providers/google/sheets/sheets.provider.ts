@@ -5,6 +5,7 @@ import { Logger } from "../../../logger/index.js";
 
 import type { WriteRangeRequest } from "./write-range-request.js";
 import type { AppendRowsRequest } from "./append-rows-request.js";
+import type { UpdateRowRequest } from "./update-row-request.js";
 
 export class SheetsProvider {
 
@@ -99,6 +100,79 @@ export class SheetsProvider {
         this.logger.info(
             "SheetsProvider",
             `Appended ${request.values.length} row(s) to sheet ${request.worksheet}.`
+        );
+    }
+
+    public async updateRow(
+        request: UpdateRowRequest
+    ): Promise<void> {
+        this.logger.debug(
+            "SheetsProvider",
+            `Updating row in worksheet ${request.worksheet}.`
+        );
+
+        const range = `${request.worksheet}!A:ZZ`;
+
+        const values = await this.readRange(
+            request.spreadsheetId,
+            range
+        );
+
+        if (values.length === 0) {
+            throw new Error("Worksheet is empty.");
+        }
+
+        const headers = values[0];
+
+        const matchColumnIndex =
+            headers.indexOf(request.matchColumn);
+
+        if (matchColumnIndex === -1) {
+            throw new Error(
+                `Column '${request.matchColumn}' not found.`
+            );
+        }
+
+        const rowIndex = values.findIndex(
+            (row, index) =>
+                index > 0 &&
+                row[matchColumnIndex] === request.matchValue
+        );
+
+        if (rowIndex === -1) {
+            throw new Error(
+                `No row found where ${request.matchColumn} = ${request.matchValue}.`
+            );
+        }
+
+        const row = [...values[rowIndex]];
+
+        for (const [column, value] of Object.entries(
+            request.updates
+        )) {
+            const columnIndex = headers.indexOf(column);
+
+            if (columnIndex === -1) {
+                throw new Error(
+                    `Column '${column}' not found.`
+                );
+            }
+
+            row[columnIndex] = value;
+        }
+
+        const writeRange =
+            `${request.worksheet}!A${rowIndex + 1}:ZZ${rowIndex + 1}`;
+
+        await this.writeRange({
+            spreadsheetId: request.spreadsheetId,
+            range: writeRange,
+            values: [row],
+        });
+
+        this.logger.info(
+            "SheetsProvider",
+            `Updated row ${rowIndex + 1}.`
         );
     }
 }

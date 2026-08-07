@@ -12,6 +12,7 @@ import { registerReadMessageTool } from "./gmail/read-message.tool.js";
 import { registerReadTool as registerSheetsReadTool } from "./sheets/read.tool.js";
 import { registerWriteTool } from "./sheets/write.tool.js";
 import { registerAppendTool } from "./sheets/append.tool.js";
+import { registerUpdateRowTool } from "./sheets/update-row.tool.js";
 
 export function registerTools(
   server: McpServer,
@@ -27,5 +28,6 @@ export function registerTools(
   registerSheetsReadTool(server,services.sheetsService);
   registerWriteTool(server,services.sheetsService);
   registerAppendTool(server,services.sheetsService);
+  registerUpdateRowTool(server, services.sheetsService);
   
 }
