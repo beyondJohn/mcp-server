@@ -48,30 +48,6 @@ export function createServices(
       Logger
     );
 
-  void (async () => {
-    try {
-      await postgresqlProvider.connect();
-
-      const rows =
-        await postgresqlProvider.query(
-          "SELECT version();"
-        );
-
-      Logger.info(
-        "PostgreSQL",
-        JSON.stringify(rows, null, 2)
-      );
-
-      await postgresqlProvider.disconnect();
-    } catch (error) {
-      Logger.error(
-        "PostgreSQL",
-        "Connection test failed.",
-        error
-      );
-    }
-  })();
-
   const postgresqlService =
     new PostgreSQLService(postgresqlProvider);
 
