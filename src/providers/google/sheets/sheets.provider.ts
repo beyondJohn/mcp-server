@@ -3,7 +3,10 @@ import { google, sheets_v4 } from "googleapis";
 import type { IGoogleAuthProvider } from "../../../auth/google-auth.interface.js";
 import { Logger } from "../../../logger/index.js";
 
+import type { WriteRangeRequest } from "./write-range-request.js";
+
 export class SheetsProvider {
+
     private readonly sheets: sheets_v4.Sheets;
 
     private get authClient() {
@@ -49,5 +52,28 @@ export class SheetsProvider {
         );
 
         return values;
+    }
+
+    public async writeRange(
+        request: WriteRangeRequest
+    ): Promise<void> {
+        this.logger.debug(
+            "SheetsProvider",
+            `Writing range ${request.range}.`
+        );
+
+        await this.sheets.spreadsheets.values.update({
+            spreadsheetId: request.spreadsheetId,
+            range: request.range,
+            valueInputOption: "USER_ENTERED",
+            requestBody: {
+                values: request.values,
+            },
+        });
+
+        this.logger.info(
+            "SheetsProvider",
+            `Updated range ${request.range}.`
+        );
     }
 }
