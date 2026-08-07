@@ -1,0 +1,21 @@
+services:
+  postgresql:
+    image: postgres:17
+
+    container_name: mcp-postgresql
+
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: mcp
+      POSTGRES_USER: mcp
+      POSTGRES_PASSWORD: mcp
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
+
+volumes:
+  postgresql-data:

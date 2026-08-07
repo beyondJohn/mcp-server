@@ -13,6 +13,7 @@ import { registerReadTool as registerSheetsReadTool } from "./sheets/read.tool.j
 import { registerWriteTool } from "./sheets/write.tool.js";
 import { registerAppendTool } from "./sheets/append.tool.js";
 import { registerUpdateRowTool } from "./sheets/update-row.tool.js";
+import { registerQueryTool } from "./postgresql/query.tool.js";
 
 export function registerTools(
   server: McpServer,
@@ -29,5 +30,6 @@ export function registerTools(
   registerWriteTool(server,services.sheetsService);
   registerAppendTool(server,services.sheetsService);
   registerUpdateRowTool(server, services.sheetsService);
+  registerQueryTool(server,services.postgresqlService);
   
 }
