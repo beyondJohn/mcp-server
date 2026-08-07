@@ -11,7 +11,7 @@ import { Logger } from "../logger/index.js";
 
 import { PostgreSQLProvider } from "../providers/postgresql/postgresql.provider.js";
 import { PostgreSQLService } from "./postgresql/service.js";
-import type { PostgreSQLConfig } from "../providers/postgresql/postgresql-config.js";
+import { config } from "../config/config.js";
 
 export interface Services {
   timeService: TimeService;
@@ -34,17 +34,10 @@ export function createServices(
     Logger
   );
 
-  const postgresqlConfig: PostgreSQLConfig = {
-    host: "localhost",
-    port: 5432,
-    database: "mcp",
-    user: "mcp",
-    password: "mcp",
-  };
 
   const postgresqlProvider =
     new PostgreSQLProvider(
-      postgresqlConfig,
+      config.postgresql,
       Logger
     );
 

@@ -1,4 +1,5 @@
 import { env } from "./env.js";
+import type { PostgreSQLConfig } from "../providers/postgresql/postgresql-config.js";
 
 export interface AppConfig {
   app: {
@@ -17,6 +18,8 @@ export interface AppConfig {
     transport: "stdio" | "http";
     port: number;
   };
+
+  postgresql: PostgreSQLConfig;
 }
 
 export const config: AppConfig = {
@@ -36,4 +39,13 @@ export const config: AppConfig = {
     transport: "stdio",
     port: 8787,
   },
+
+  postgresql: {
+    host: env.POSTGRESQL_HOST,
+    port: env.POSTGRESQL_PORT,
+    database: env.POSTGRESQL_DATABASE,
+    user: env.POSTGRESQL_USER,
+    password: env.POSTGRESQL_PASSWORD,
+  },
+
 };

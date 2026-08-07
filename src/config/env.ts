@@ -13,6 +13,28 @@ const envSchema = z.object({
     .string()
     .url()
     .default("http://localhost:3000/oauth/callback"),
+
+  POSTGRESQL_HOST: z
+    .string()
+    .default("localhost"),
+
+  POSTGRESQL_PORT: z.coerce
+    .number()
+    .int()
+    .positive()
+    .default(5432),
+
+  POSTGRESQL_DATABASE: z
+    .string()
+    .default("mcp"),
+
+  POSTGRESQL_USER: z
+    .string()
+    .default("mcp"),
+
+  POSTGRESQL_PASSWORD: z
+    .string()
+    .default("mcp"),
 });
 
 export const env = envSchema.parse(process.env);
