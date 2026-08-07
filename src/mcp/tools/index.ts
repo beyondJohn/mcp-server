@@ -14,6 +14,9 @@ import { registerWriteTool } from "./sheets/write.tool.js";
 import { registerAppendTool } from "./sheets/append.tool.js";
 import { registerUpdateRowTool } from "./sheets/update-row.tool.js";
 import { registerQueryTool } from "./postgresql/query.tool.js";
+import { registerListTablesTool } from "./postgresql/list-tables.tool.js";
+import { registerDescribeTableTool } from "./postgresql/describe-table.tool.js";
+import { registerListSchemasTool } from "./postgresql/list-schemas.tool.js";
 
 export function registerTools(
   server: McpServer,
@@ -31,5 +34,8 @@ export function registerTools(
   registerAppendTool(server,services.sheetsService);
   registerUpdateRowTool(server, services.sheetsService);
   registerQueryTool(server,services.postgresqlService);
+  registerListTablesTool(server,services.postgresqlService);
+  registerDescribeTableTool(server,services.postgresqlService);
+  registerListSchemasTool(server,services.postgresqlService);
   
 }
