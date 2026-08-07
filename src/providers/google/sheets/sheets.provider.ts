@@ -4,6 +4,7 @@ import type { IGoogleAuthProvider } from "../../../auth/google-auth.interface.js
 import { Logger } from "../../../logger/index.js";
 
 import type { WriteRangeRequest } from "./write-range-request.js";
+import type { AppendRowsRequest } from "./append-rows-request.js";
 
 export class SheetsProvider {
 
@@ -74,6 +75,30 @@ export class SheetsProvider {
         this.logger.info(
             "SheetsProvider",
             `Updated range ${request.range}.`
+        );
+    }
+
+    public async appendRows(
+        request: AppendRowsRequest
+    ): Promise<void> {
+        this.logger.debug(
+            "SheetsProvider",
+            `Appending rows to sheet ${request.worksheet}.`
+        );
+
+        await this.sheets.spreadsheets.values.append({
+            spreadsheetId: request.spreadsheetId,
+            range: `${request.worksheet}!A:Z`,
+            valueInputOption: "USER_ENTERED",
+            insertDataOption: "INSERT_ROWS",
+            requestBody: {
+                values: request.values,
+            },
+        });
+
+        this.logger.info(
+            "SheetsProvider",
+            `Appended ${request.values.length} row(s) to sheet ${request.worksheet}.`
         );
     }
 }
