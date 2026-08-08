@@ -17,6 +17,11 @@ import { registerQueryTool } from "./postgresql/query.tool.js";
 import { registerListTablesTool } from "./postgresql/list-tables.tool.js";
 import { registerDescribeTableTool } from "./postgresql/describe-table.tool.js";
 import { registerListSchemasTool } from "./postgresql/list-schemas.tool.js";
+import { registerListIndexesTool } from "./postgresql/list-indexes.tool.js";
+import { registerListForeignKeysTool } from "./postgresql/list-foreign-keys.tool.js";
+import { registerInsertRowTool } from "./postgresql/insert-row.tool.js";
+import { registerUpdateRowTool as registerPostgreSQLUpdateRowTool } from "./postgresql/update-row.tool.js";
+import { registerDeleteRowTool } from "./postgresql/delete-row.tool.js";
 
 export function registerTools(
   server: McpServer,
@@ -33,9 +38,14 @@ export function registerTools(
   registerWriteTool(server,services.sheetsService);
   registerAppendTool(server,services.sheetsService);
   registerUpdateRowTool(server, services.sheetsService);
+  registerPostgreSQLUpdateRowTool(server, services.postgresqlService);  
   registerQueryTool(server,services.postgresqlService);
   registerListTablesTool(server,services.postgresqlService);
   registerDescribeTableTool(server,services.postgresqlService);
   registerListSchemasTool(server,services.postgresqlService);
-  
+  registerListIndexesTool(server,services.postgresqlService);
+  registerListForeignKeysTool(server,services.postgresqlService);
+  registerInsertRowTool(server,services.postgresqlService);
+  registerDeleteRowTool(server,services.postgresqlService);
+
 }
