@@ -5,7 +5,7 @@ import type { UpdateRowRequest } from "../../providers/google/sheets/update-row-
 
 export class SheetsService {
     constructor(
-        private readonly sheetsProvider: SheetsProvider
+        private readonly provider: SheetsProvider
     ) { }
 
 
@@ -13,7 +13,7 @@ export class SheetsService {
         spreadsheetId: string,
         range: string
     ): Promise<string[][]> {
-        return this.sheetsProvider.readRange(
+        return this.provider.readRange(
             spreadsheetId,
             range
         );
@@ -22,18 +22,29 @@ export class SheetsService {
     public async writeRange(
         request: WriteRangeRequest
     ): Promise<void> {
-        return this.sheetsProvider.writeRange(request);
+        return this.provider.writeRange(request);
     }
 
     public async appendRows(
         request: AppendRowsRequest
     ): Promise<void> {
-        return this.sheetsProvider.appendRows(request);
+        return this.provider.appendRows(request);
     }
 
     public async updateRow(
         request: UpdateRowRequest
     ): Promise<void> {
-        return this.sheetsProvider.updateRow(request);
+        return this.provider.updateRow(request);
+    }
+
+    public async createSpreadsheet(
+        title: string
+    ): Promise<{
+        spreadsheetId: string;
+        spreadsheetUrl: string;
+    }> {
+        return this.provider.createSpreadsheet(
+            title
+        );
     }
 }

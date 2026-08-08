@@ -175,4 +175,48 @@ export class SheetsProvider {
             `Updated row ${rowIndex + 1}.`
         );
     }
+
+    public async createSpreadsheet(
+        title: string
+    ): Promise<{
+        spreadsheetId: string;
+        spreadsheetUrl: string;
+    }> {
+        this.logger.debug(
+            "SheetsProvider",
+            `Creating spreadsheet ${title}.`
+        );
+
+        const response =
+            await this.sheets.spreadsheets.create({
+                requestBody: {
+                    properties: {
+                        title,
+                    },
+                },
+            });
+
+        const spreadsheetId =
+            response.data.spreadsheetId;
+
+        if (!spreadsheetId) {
+            throw new Error(
+                "Google Sheets did not return a spreadsheet ID."
+            );
+        }
+
+        const spreadsheetUrl =
+            response.data.spreadsheetUrl ??
+            `https://docs.google.com/spreadsheets/d/${spreadsheetId}`;
+
+        this.logger.info(
+            "SheetsProvider",
+            `Created spreadsheet ${spreadsheetId}.`
+        );
+
+        return {
+            spreadsheetId,
+            spreadsheetUrl,
+        };
+    }
 }
