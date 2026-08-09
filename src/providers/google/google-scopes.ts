@@ -20,4 +20,7 @@ export const GoogleScopes = {
   SHEETS: [
     "https://www.googleapis.com/auth/spreadsheets",
   ],
+  CALENDAR: [
+    "https://www.googleapis.com/auth/calendar"
+  ],
 } as const;

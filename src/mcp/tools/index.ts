@@ -24,6 +24,13 @@ import { registerUpdateRowTool as registerPostgreSQLUpdateRowTool } from "./post
 import { registerDeleteRowTool } from "./postgresql/delete-row.tool.js";
 import { registerSheetsCreateTool } from "./sheets/create.tool.js";
 import { registerCreateTableTool } from "./postgresql/create-table.tool.js";
+import { registerCalendarListCalendarsTool } from "./calendar/list-calendars.tool.js";
+import { registerCalendarListEventsTool } from "./calendar/list-events.tool.js";
+import { registerCalendarGetEventTool } from "./calendar/get-event.tool.js";
+import { registerCalendarUpdateEventTool } from "./calendar/update-event.tool.js";
+import { registerCalendarDeleteEventTool } from "./calendar/delete-event.tool.js";
+import { registerCalendarCreateEventTool } from "./calendar/create-event.tool.js";
+
 
 export function registerTools(
   server: McpServer,
@@ -45,11 +52,18 @@ export function registerTools(
   registerListTablesTool(server,services.postgresqlService);
   registerDescribeTableTool(server,services.postgresqlService);
   registerListSchemasTool(server,services.postgresqlService);
-  registerListIndexesTool(server,services.postgresqlService);
+  registerListIndexesTool(server,services.postgresqlService); 
   registerListForeignKeysTool(server,services.postgresqlService);
   registerInsertRowTool(server,services.postgresqlService);
   registerDeleteRowTool(server,services.postgresqlService);
   registerCreateTableTool(server, services.postgresqlService);
   registerSheetsCreateTool(server, services.sheetsService);
+  registerCalendarListCalendarsTool(server, services.calendarService);
+  registerCalendarListEventsTool(server, services.calendarService);
+  registerCalendarGetEventTool(server, services.calendarService);
+  registerCalendarUpdateEventTool(server, services.calendarService);
+  registerCalendarDeleteEventTool(server, services.calendarService);
+  registerCalendarCreateEventTool(server, services.calendarService);
+
 
 }
