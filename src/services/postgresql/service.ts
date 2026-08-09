@@ -4,6 +4,7 @@ import type { PostgreSQLProvider } from "../../providers/postgresql/postgresql.p
 import type { InsertRowRequest } from "../../providers/postgresql/insert-row-request.js";
 import type { UpdateRowRequest } from "../../providers/postgresql/update-row-request.js";
 import type { DeleteRowRequest } from "../../providers/postgresql/delete-row-request.js";
+import type { CreateTableRequest } from "../../providers/postgresql/create-table-request.js";
 
 export class PostgreSQLService {
     constructor(
@@ -71,5 +72,12 @@ export class PostgreSQLService {
     ): Promise<Record<string, unknown>[]> {
         return this.provider.deleteRow(request);
     }
-    
+
+    public async createTable(
+        request: CreateTableRequest
+    ): Promise<void> {
+        return this.provider.createTable(
+            request
+        );
+    }
 }

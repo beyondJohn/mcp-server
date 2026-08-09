@@ -23,6 +23,7 @@ import { registerInsertRowTool } from "./postgresql/insert-row.tool.js";
 import { registerUpdateRowTool as registerPostgreSQLUpdateRowTool } from "./postgresql/update-row.tool.js";
 import { registerDeleteRowTool } from "./postgresql/delete-row.tool.js";
 import { registerSheetsCreateTool } from "./sheets/create.tool.js";
+import { registerCreateTableTool } from "./postgresql/create-table.tool.js";
 
 export function registerTools(
   server: McpServer,
@@ -48,6 +49,7 @@ export function registerTools(
   registerListForeignKeysTool(server,services.postgresqlService);
   registerInsertRowTool(server,services.postgresqlService);
   registerDeleteRowTool(server,services.postgresqlService);
+  registerCreateTableTool(server, services.postgresqlService);
   registerSheetsCreateTool(server, services.sheetsService);
 
 }

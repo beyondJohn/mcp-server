@@ -8,6 +8,7 @@ import type { ForeignKeyDefinition } from "./foreign-key-definition.js";
 import type { InsertRowRequest } from "./insert-row-request.js";
 import type { UpdateRowRequest } from "./update-row-request.js";
 import type { DeleteRowRequest } from "./delete-row-request.js";
+import type { CreateTableRequest } from "./create-table-request.js";
 
 export class PostgreSQLProvider {
     private readonly pool: Pool;
@@ -22,6 +23,20 @@ export class PostgreSQLProvider {
         ) {
             throw new Error(
                 `Invalid PostgreSQL identifier: ${identifier}`
+            );
+        }
+    }
+
+    private validateDataType(
+        dataType: string
+    ): void {
+        if (
+            !/^[A-Za-z][A-Za-z0-9_]*(\s+(WITH|WITHOUT)\s+TIME\s+ZONE)?(\(\d+(,\s*\d+)?\))?(\[\])?$/.test(
+                dataType.trim()
+            )
+        ) {
+            throw new Error(
+                `Invalid PostgreSQL data type: ${dataType}`
             );
         }
     }
@@ -452,5 +467,100 @@ export class PostgreSQLProvider {
         );
 
         return result.rows;
+    }
+
+    public async createTable(
+        request: CreateTableRequest
+    ): Promise<void> {
+        if (request.columns.length === 0) {
+            throw new Error(
+                "At least one column is required."
+            );
+        }
+
+        this.validateIdentifier(
+            request.table
+        );
+
+        request.columns.forEach(column => {
+            this.validateIdentifier(
+                column.name
+            );
+
+            this.validateDataType(
+                column.dataType
+            );
+            
+        });
+
+        const columnNames =
+            new Set<string>();
+
+        request.columns.forEach(column => {
+            const normalized =
+                column.name.toLowerCase();
+
+            if (columnNames.has(normalized)) {
+                throw new Error(
+                    `Duplicate column name: ${column.name}`
+                );
+            }
+
+            columnNames.add(normalized);
+        });
+
+        const primaryKey =
+            request.primaryKey ?? [];
+
+        primaryKey.forEach(column =>
+            this.validateIdentifier(column)
+        );
+
+        for (const column of primaryKey) {
+            if (!columnNames.has(column.toLowerCase())) {
+                throw new Error(
+                    `Primary key column does not exist: ${column}`
+                );
+            }
+        }
+
+        const definitions =
+            request.columns.map(column => {
+                const nullable =
+                    column.nullable === false
+                        ? " NOT NULL"
+                        : "";
+
+                return `"${column.name}" ${column.dataType}${nullable}`;
+            });
+
+        if (primaryKey.length > 0) {
+            const primaryKeyColumns =
+                primaryKey
+                    .map(column => `"${column}"`)
+                    .join(", ");
+
+            definitions.push(
+                `PRIMARY KEY (${primaryKeyColumns})`
+            );
+        }
+
+        const sql = `
+    CREATE TABLE "${request.table}" (
+      ${definitions.join(",\n      ")}
+    );
+  `;
+
+        this.logger.debug(
+            "PostgreSQLProvider",
+            `Creating table ${request.table}.`
+        );
+
+        await this.pool.query(sql);
+
+        this.logger.info(
+            "PostgreSQLProvider",
+            `Created table ${request.table}.`
+        );
     }
 }
