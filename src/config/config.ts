@@ -20,6 +20,10 @@ export interface AppConfig {
   };
 
   postgresql: PostgreSQLConfig;
+
+  tavily: {
+    apiKey: string;
+  };
 }
 
 export const config: AppConfig = {
@@ -47,5 +51,8 @@ export const config: AppConfig = {
     user: env.POSTGRESQL_USER,
     password: env.POSTGRESQL_PASSWORD,
   },
-
+  
+  tavily: {
+    apiKey: env.TAVILY_API_KEY,
+  },
 };

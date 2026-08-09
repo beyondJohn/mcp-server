@@ -35,6 +35,10 @@ const envSchema = z.object({
   POSTGRESQL_PASSWORD: z
     .string()
     .default("mcp"),
+
+  TAVILY_API_KEY: z
+    .string()
+    .min(1),
 });
 
 export const env = envSchema.parse(process.env);

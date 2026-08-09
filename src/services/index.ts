@@ -14,6 +14,9 @@ import { PostgreSQLService } from "./postgresql/service.js";
 import { config } from "../config/config.js";
 import { CalendarProvider } from "../providers/google/calendar/calendar.provider.js";
 
+import { TavilyProvider } from "../providers/tavily/tavily.provider.js";
+import { WebSearchService } from "./web-search/service.js";
+
 export interface Services {
   timeService: TimeService;
   systemInfoService: SystemInfoService;
@@ -21,6 +24,7 @@ export interface Services {
   sheetsService: SheetsService;
   postgresqlService: PostgreSQLService;
   calendarService: CalendarService;
+  webSearchService: WebSearchService;
 }
 
 export function createServices(
@@ -57,6 +61,17 @@ export function createServices(
       calendarProvider
     );
 
+  const tavilyProvider =
+    new TavilyProvider(
+      config.tavily,
+      Logger
+    );
+
+  const webSearchService =
+    new WebSearchService(
+      tavilyProvider
+    );
+
   return {
     timeService: new TimeService(),
     systemInfoService: new SystemInfoService(),
@@ -64,5 +79,6 @@ export function createServices(
     sheetsService: new SheetsService(sheetsProvider),
     postgresqlService,
     calendarService,
+    webSearchService,
   };
 }

@@ -30,7 +30,7 @@ import { registerCalendarGetEventTool } from "./calendar/get-event.tool.js";
 import { registerCalendarUpdateEventTool } from "./calendar/update-event.tool.js";
 import { registerCalendarDeleteEventTool } from "./calendar/delete-event.tool.js";
 import { registerCalendarCreateEventTool } from "./calendar/create-event.tool.js";
-
+import { registerWebSearchTool } from "./web-search/search.tool.js";
 
 export function registerTools(
   server: McpServer,
@@ -64,6 +64,7 @@ export function registerTools(
   registerCalendarUpdateEventTool(server, services.calendarService);
   registerCalendarDeleteEventTool(server, services.calendarService);
   registerCalendarCreateEventTool(server, services.calendarService);
+  registerWebSearchTool(server, services.webSearchService);
 
 
 }
