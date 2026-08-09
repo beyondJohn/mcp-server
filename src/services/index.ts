@@ -69,7 +69,8 @@ export function createServices(
 
   const webSearchService =
     new WebSearchService(
-      tavilyProvider
+      tavilyProvider,
+      postgresqlService
     );
 
   return {
