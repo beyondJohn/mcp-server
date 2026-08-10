@@ -59,6 +59,7 @@ export class WebSearchService {
                     max_results: maxResults,
                     search_depth: searchDepth,
                     datetime,
+                    score: result.score,
                 },
             });
         }
