@@ -15,6 +15,11 @@ import { config } from "../config/config.js";
 import { CalendarProvider } from "../providers/google/calendar/calendar.provider.js";
 
 import { TavilyProvider } from "../providers/tavily/tavily.provider.js";
+import { TavilyCrawlService } from "./tavily-crawl/service.js";
+import { TavilyExtractService } from "./tavily-extract/service.js";
+import { TavilyMapService } from "./tavily-map/service.js";
+import { TavilyResearchService } from "./tavily-research/service.js";
+import { TavilyStorageService } from "./tavily-storage/service.js";
 import { WebSearchService } from "./web-search/service.js";
 
 export interface Services {
@@ -25,6 +30,10 @@ export interface Services {
   postgresqlService: PostgreSQLService;
   calendarService: CalendarService;
   webSearchService: WebSearchService;
+  tavilyResearchService: TavilyResearchService;
+  tavilyExtractService: TavilyExtractService;
+  tavilyCrawlService: TavilyCrawlService;
+  tavilyMapService: TavilyMapService;
 }
 
 export function createServices(
@@ -67,10 +76,40 @@ export function createServices(
       Logger
     );
 
+  const tavilyStorageService =
+    new TavilyStorageService(
+      postgresqlService
+    );
+
   const webSearchService =
     new WebSearchService(
       tavilyProvider,
-      postgresqlService
+      postgresqlService,
+      tavilyStorageService
+    );
+
+  const tavilyResearchService =
+    new TavilyResearchService(
+      tavilyProvider,
+      tavilyStorageService
+    );
+
+  const tavilyExtractService =
+    new TavilyExtractService(
+      tavilyProvider,
+      tavilyStorageService
+    );
+
+  const tavilyCrawlService =
+    new TavilyCrawlService(
+      tavilyProvider,
+      tavilyStorageService
+    );
+
+  const tavilyMapService =
+    new TavilyMapService(
+      tavilyProvider,
+      tavilyStorageService
     );
 
   return {
@@ -81,5 +120,9 @@ export function createServices(
     postgresqlService,
     calendarService,
     webSearchService,
+    tavilyResearchService,
+    tavilyExtractService,
+    tavilyCrawlService,
+    tavilyMapService,
   };
 }

@@ -30,6 +30,11 @@ import { registerCalendarGetEventTool } from "./calendar/get-event.tool.js";
 import { registerCalendarUpdateEventTool } from "./calendar/update-event.tool.js";
 import { registerCalendarDeleteEventTool } from "./calendar/delete-event.tool.js";
 import { registerCalendarCreateEventTool } from "./calendar/create-event.tool.js";
+import { registerTavilyCrawlTool } from "./tavily/crawl.tool.js";
+import { registerTavilyExtractTool } from "./tavily/extract.tool.js";
+import { registerTavilyGetResearchTool } from "./tavily/get-research.tool.js";
+import { registerTavilyMapTool } from "./tavily/map.tool.js";
+import { registerTavilyResearchTool } from "./tavily/research.tool.js";
 import { registerWebSearchTool } from "./web-search/search.tool.js";
 
 export function registerTools(
@@ -65,6 +70,11 @@ export function registerTools(
   registerCalendarDeleteEventTool(server, services.calendarService);
   registerCalendarCreateEventTool(server, services.calendarService);
   registerWebSearchTool(server, services.webSearchService);
+  registerTavilyResearchTool(server, services.tavilyResearchService);
+  registerTavilyGetResearchTool(server, services.tavilyResearchService);
+  registerTavilyExtractTool(server, services.tavilyExtractService);
+  registerTavilyCrawlTool(server, services.tavilyCrawlService);
+  registerTavilyMapTool(server, services.tavilyMapService);
 
 
 }
